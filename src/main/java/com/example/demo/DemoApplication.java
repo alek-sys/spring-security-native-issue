@@ -24,7 +24,7 @@ class AnotherBean {
 	private SomeBean someBean;
 
 	@Autowired(required = false)
-	protected void setSomeBean(SomeBean someBean) {
+	public void setSomeBean(SomeBean someBean) {
 		this.someBean = someBean;
 	}
 
@@ -48,7 +48,8 @@ class TestController {
 		for (ObjectPostProcessor<Object> objectPostProcessor : objectPostProcessors) {
 			anotherBean = objectPostProcessor.postProcess(anotherBean);
 		}
-		return anotherBean.getSomeBean() != null ? "Autowired" : "Not autowired";
+		String message = anotherBean.getSomeBean() != null ? "Autowired" : "Not autowired";
+		return message + ", " + objectPostProcessors.size() + " object post processor(s) found";
 	}
 }
 

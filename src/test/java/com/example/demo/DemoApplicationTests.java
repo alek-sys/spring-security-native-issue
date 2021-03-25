@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ class DemoApplicationTests {
 	void shouldInjectBean() throws Exception {
 		mockMvc.perform(get("/"))
 				.andExpect(status().is2xxSuccessful())
-				.andExpect(content().string("Autowired"));
+				.andExpect(content().string(Matchers.containsString("Autowired")));
 	}
 
 }
