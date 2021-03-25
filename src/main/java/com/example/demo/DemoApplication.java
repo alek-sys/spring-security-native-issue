@@ -1,17 +1,10 @@
 package com.example.demo;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
-import org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,29 +29,17 @@ class AnotherBean {
 @RestController
 class TestController {
 
-	final List<ObjectPostProcessor<Object>> objectPostProcessors;
+	final AutowireCapableBeanFactory autowireCapableBeanFactory;
 
-	public TestController(List<ObjectPostProcessor<Object>> objectPostProcessors) {
-		this.objectPostProcessors = objectPostProcessors;
+	public TestController(AutowireCapableBeanFactory autowireCapableBeanFactory) {
+		this.autowireCapableBeanFactory = autowireCapableBeanFactory;
 	}
 
 	@GetMapping("/")
 	String index() {
 		AnotherBean anotherBean = new AnotherBean();
-		for (ObjectPostProcessor<Object> objectPostProcessor : objectPostProcessors) {
-			anotherBean = objectPostProcessor.postProcess(anotherBean);
-		}
-		String message = anotherBean.getSomeBean() != null ? "Autowired" : "Not autowired";
-		return message + ", " + objectPostProcessors.size() + " object post processor(s) found";
-	}
-}
-
-@Configuration
-class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().permitAll();
+		autowireCapableBeanFactory.autowireBean(anotherBean);
+		return anotherBean.getSomeBean() != null ? "Autowired" : "Not autowired";
 	}
 }
 

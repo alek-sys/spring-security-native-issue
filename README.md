@@ -1,14 +1,12 @@
 # Spring Native issue
 
-This is a sample app to reproduce Spring Native issue. The issue seems to be around `ObjectPostProcessor`, most likely like in `AutowireBeanFactoryObjectPostProcessor`, but don't take my word for it.
-
-I found the issue while working on Spring Authorization Server (experimental) app when compiled to native image, this example is some manual hacking to boil it down to the minimal example. 
+This is a sample app to reproduce Spring Native issue. The issue seems to be around `AutowireCapableBeanFactory`.
 
 # Sample app
 
 Components of the sample app:
 1. `SomeBean` and `AnotherBean` are two mock beans
-2. `TestController` just to test injection worked. `index` method is doing what some of Spring Security's `*Configurer` classes do, using `objectPostProcessors` to post-process some configuration object and inject required beans.
+2. `TestController` just to test injection worked. `index` method is to run `AutowireCapableBeanFactory` autowiring manually.
 
 # Steps to reproduce
 
